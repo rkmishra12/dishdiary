@@ -1,4 +1,4 @@
-const API_BASE = 'https://dishdiary-sh8n.onrender.com';
+const API_BASE = 'https://dishdiary-sh8n.onrender.com/api';
 
 class Api {
     static get token() {
