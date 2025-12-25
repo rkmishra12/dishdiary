@@ -20,6 +20,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const type = document.getElementById('type-filter').value;
         const maxReadyTime = document.getElementById('time-filter').value;
 
+        // If no search term or filters are provided, don't call the external API
+        if (!query && !diet && !cuisine && !type && !maxReadyTime) {
+            resultsGrid.innerHTML = '<p class="text-center">Enter a search term or adjust filters to search recipes.</p>';
+            return;
+        }
+
         UI.showLoading(resultsGrid);
 
         try {
@@ -33,7 +39,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             resultsGrid.innerHTML = recipes.map(recipe => UI.renderRecipeCard(recipe)).join('');
         } catch (err) {
-            UI.showError(resultsGrid, 'Failed to fetch results.');
+            console.error('Search error:', err);
+            // Show more specific error message if available
+            const errorMessage = err.message || 'Failed to fetch results.';
+            const errorHint = err.hint ? `<br><small>${err.hint}</small>` : '';
+            UI.showError(resultsGrid, errorMessage + errorHint);
         }
     }
 
@@ -47,11 +57,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Initial search if query exists or just load defaults
+    // Initial search if query exists; otherwise show instructions
     if (initialQuery) {
         executeSearch();
     } else {
-        // Load some random stuff or nothing
-        executeSearch();
+        resultsGrid.innerHTML = '<p class="text-center">Enter a search term to find recipes.</p>';
     }
 });
