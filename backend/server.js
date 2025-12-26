@@ -16,8 +16,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-import cors from "cors";
-
 app.use(
   cors({
     origin: ["http://localhost:3000", "https://dishdiary-mu.vercel.app"],
