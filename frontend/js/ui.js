@@ -19,8 +19,8 @@ export function renderNavbar() {
         navLinks.innerHTML = `
             <a href="index.html">Home</a>
             <a href="search.html">Explore</a>
-            <a href="login.html">Login</a>
-            <a href="register.html" class="btn btn-primary">Sign Up</a>
+            <a href="register.html">Sign Up</a>
+            <a href="login.html" class="btn btn-primary">Login</a>
         `;
     }
 }
