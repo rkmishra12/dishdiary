@@ -6,25 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Recipes - Recipe Management System</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .filters-bar {
-            background-color: var(--surface-color);
-            padding: var(--spacing-md);
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: var(--spacing-lg);
-            display: flex;
-            gap: var(--spacing-md);
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .filter-select {
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            background-color: #fff;
-        }
-    </style>
 </head>
 
 <body>
@@ -36,8 +17,7 @@
     </nav>
 
     <div class="filters-bar container">
-        <input type="text" id="search-input" class="form-input" style="width: auto; flex-grow: 1;"
-            placeholder="Search recipes...">
+        <input type="text" id="search-input" class="form-input" placeholder="Search recipes...">
 
         <select id="diet-filter" class="filter-select">
             <option value="">Any Diet</option>
@@ -81,7 +61,7 @@
     </div>
 
     <div class="container">
-        <div id="results-grid" class="grid" style="margin-top: 20px;">
+        <div id="results-grid" class="grid">
             <!-- Results via JS -->
         </div>
     </div>

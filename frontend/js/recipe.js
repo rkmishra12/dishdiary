@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', async () => {
+    document.addEventListener('DOMContentLoaded', async () => {
     renderNavbar();
 
     const recipeContent = document.getElementById('recipe-content');

@@ -38,5 +38,7 @@ CREATE TABLE IF NOT EXISTS user_preferences (
     user_id INT PRIMARY KEY,
     dietary_preferences JSON, -- e.g., ["vegetarian", "gluten-free"]
     allergies JSON,
+    cooking_skill_level ENUM('beginner', 'intermediate', 'advanced') DEFAULT 'beginner',
+    ingredient_preferences JSON,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
