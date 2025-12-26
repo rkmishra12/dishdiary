@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    UI.renderNavbar();
+    renderNavbar();
 
     const recipeContent = document.getElementById('recipe-content');
     const reviewsSection = document.getElementById('reviews-section');
@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Load Recipe Details
-    UI.showLoading(recipeContent);
+    showLoading(recipeContent);
 
     try {
-        const recipe = await Api.getRecipeDetails(recipeId);
+        const recipe = await getRecipeDetails(recipeId);
 
         // Render Details
         const ingredients = recipe.extendedIngredients.map(ing => `<li>${ing.original}</li>`).join('');
@@ -60,12 +60,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadReviews(recipeId);
 
     } catch (err) {
-        UI.showError(recipeContent, 'Failed to load recipe details.');
+        showError(recipeContent, 'Failed to load recipe details.');
     }
 
     async function loadReviews(id) {
         try {
-            const reviews = await Api.getReviews(id);
+            const reviews = await getReviews(id);
             if (reviews.length === 0) {
                 reviewsList.innerHTML = '<p class="text-center" style="color: var(--text-light);">No reviews yet. Be the first!</p>';
             } else {
@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (reviewForm) {
         // Check if user is logged in
-        if (!Api.user) {
-            reviewForm.innerHTML = '<p><a href="login.html" style="color: var(--primary-color);">Login</a> to write a review.</p>';
+        if (!getUser()) {
+            reviewForm.innerHTML = '<p><a href="login.html" style="color: #1a1a1a;">Login</a> to write a review.</p>';
         } else {
             reviewForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const comment = document.getElementById('review-comment').value;
 
                 try {
-                    await Api.addReview(recipeId, rating, comment);
+                    await addReview(recipeId, rating, comment);
                     reviewForm.reset();
                     loadReviews(recipeId);
                 } catch (err) {

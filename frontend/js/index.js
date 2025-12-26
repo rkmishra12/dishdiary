@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    UI.renderNavbar();
+    renderNavbar();
 
     // Init Logic for Home Page
     const heroSearchBtn = document.getElementById('hero-search-btn');
@@ -23,10 +23,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Load Featured/Random Recipes
     if (featuredGrid) {
-        UI.showLoading(featuredGrid);
+        showLoading(featuredGrid);
         try {
             // "Featured" is just a search for 'healthy' or something generic for now
-            const data = await Api.searchRecipes({ query: 'healthy', number: 6 });
+            const data = await searchRecipes({ query: 'healthy', number: 6 });
             const recipes = data.results; // Spoonacular format
 
             if (recipes.length === 0) {
@@ -34,9 +34,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            featuredGrid.innerHTML = recipes.map(recipe => UI.renderRecipeCard(recipe)).join('');
+            featuredGrid.innerHTML = recipes.map(recipe => renderRecipeCard(recipe)).join('');
         } catch (err) {
-            UI.showError(featuredGrid, 'Failed to load recipes. Please try again later.');
+            showError(featuredGrid, 'Failed to load recipes. Please try again later.');
         }
     }
 });

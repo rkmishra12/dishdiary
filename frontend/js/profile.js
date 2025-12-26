@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    UI.renderNavbar();
+    renderNavbar();
 
-    const user = Api.user;
+    const user = getUser();
     if (!user) {
         window.location.href = 'login.html';
         return;
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             <div style="margin-top: var(--spacing-xl); text-align: left;">
                 <h2>My Favorite Recipes</h2>
-                 <p style="color: var(--text-light);">Coming soon...</p>
+                <p style="color: var(--text-light);">Coming soon...</p>
             </div>
         </div>
     `;
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadPreferences(userId) {
     const container = document.getElementById('preferences-container');
     try {
-        const prefs = await Api.getUserPreferences(userId);
+        const prefs = await getUserPreferences(userId);
         renderPreferencesForm(userId, prefs);
     } catch (err) {
         container.innerHTML = `<p style="color: red;">Error loading preferences: ${err.message}</p>`;
@@ -126,7 +126,7 @@ function renderPreferencesForm(userId, currentPrefs) {
             .filter(item => item.length > 0);
 
         try {
-            await Api.updateUserPreferences(userId, {
+            await updateUserPreferences(userId, {
                 dietary_preferences: selectedDiets,
                 allergies: selectedAllergies,
                 cooking_skill_level: skillLevel,

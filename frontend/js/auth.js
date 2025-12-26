@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    UI.renderNavbar();
+    renderNavbar();
 
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             authMessage.classList.add('hidden');
 
             try {
-                await Api.login(email, password);
+                await login(email, password);
                 window.location.href = 'index.html';
             } catch (err) {
                 authMessage.textContent = err.message;
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             authMessage.classList.add('hidden');
 
             try {
-                await Api.register(username, email, password);
+                await register(username, email, password);
                 // Auto login after register or redirect to login? 
                 // Let's redirect to login for simplicity or just auto-login if API supported it.
                 // For now, redirect to login with query param
