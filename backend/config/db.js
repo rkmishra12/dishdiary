@@ -1,9 +1,7 @@
-import mysql from "mysql2";
-import fs from "fs";
-import path from "path";
 import dotenv from "dotenv";
+dotenv.config({ path: "backend/.env" });
 
-dotenv.config({ path: path.join(process.cwd(), "backend/.env") });
+import mysql from "mysql2";
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -13,10 +11,7 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
-  ssl: {
-    rejectUnauthorized: false, // allows Aiven self-signed chain
-  },
+  ssl: { rejectUnauthorized: false }, // This alone works for Aiven
 });
 
 export default pool.promise();
