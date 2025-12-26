@@ -16,7 +16,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',')
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -40,7 +45,7 @@ app.get("/api/health", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello World");  
+  res.send("Hello World");
 });
 
 app.listen(PORT, () => {

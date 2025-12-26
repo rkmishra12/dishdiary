@@ -1,8 +1,10 @@
-    document.addEventListener('DOMContentLoaded', async () => {
+import { getUser, getRecipeDetails, getReviews, addReview } from './api.js';
+import { renderNavbar, showLoading, showError } from './ui.js';
+
+document.addEventListener('DOMContentLoaded', async () => {
     renderNavbar();
 
     const recipeContent = document.getElementById('recipe-content');
-    const reviewsSection = document.getElementById('reviews-section');
     const reviewsList = document.getElementById('reviews-list');
     const reviewForm = document.getElementById('review-form');
 
@@ -22,17 +24,17 @@
 
         // Render Details
         const ingredients = recipe.extendedIngredients.map(ing => `<li>${ing.original}</li>`).join('');
-        const dietTags = recipe.diets.map(d => `<span class="tag">${d}</span>`).join('');
+        const dietTags = (recipe.diets || []).map(d => `<span class="tag">${d}</span>`).join('');
 
         recipeContent.innerHTML = `
-            <div class="recipe-header" style="margin-bottom: var(--spacing-xl);">
-                <img src="${recipe.image}" alt="${recipe.title}" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: var(--radius-lg);">
-                <div style="margin-top: var(--spacing-lg);">
-                    <h1 style="font-size: 2.5rem; margin-bottom: var(--spacing-sm);">${recipe.title}</h1>
-                    <div style="display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-md); flex-wrap: wrap;">
+            <div class="recipe-header" style="margin-bottom: 32px;">
+                <img src="${recipe.image}" alt="${recipe.title}" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 12px;">
+                <div style="margin-top: 24px;">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 8px;">${recipe.title}</h1>
+                    <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
                         ${dietTags}
                     </div>
-                    <div style="display: flex; gap: var(--spacing-lg); color: var(--text-light);">
+                    <div style="display: flex; gap: 24px; color: #666;">
                         <span>⏱ ${recipe.readyInMinutes} mins</span>
                         <span>👥 Serves ${recipe.servings}</span>
                         <span>❤️ ${recipe.aggregateLikes} likes</span>
@@ -40,15 +42,15 @@
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: var(--spacing-xl);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px;">
                 <div>
-                    <h3 style="margin-bottom: var(--spacing-md);">Ingredients</h3>
+                    <h3 style="margin-bottom: 16px;">Ingredients</h3>
                     <ul style="line-height: 1.8; list-style-type: disc; padding-left: 20px;">
                         ${ingredients}
                     </ul>
                 </div>
                 <div>
-                    <h3 style="margin-bottom: var(--spacing-md);">Instructions</h3>
+                    <h3 style="margin-bottom: 16px;">Instructions</h3>
                     <div class="instructions" style="line-height: 1.8;">
                         ${recipe.instructions || 'No instructions provided.'}
                     </div>
@@ -67,16 +69,16 @@
         try {
             const reviews = await getReviews(id);
             if (reviews.length === 0) {
-                reviewsList.innerHTML = '<p class="text-center" style="color: var(--text-light);">No reviews yet. Be the first!</p>';
+                reviewsList.innerHTML = '<p class="text-center" style="color: #666;">No reviews yet. Be the first!</p>';
             } else {
                 reviewsList.innerHTML = reviews.map(r => `
-                    <div style="background: var(--surface-color); padding: var(--spacing-md); border-radius: var(--radius-sm); margin-bottom: var(--spacing-sm); box-shadow: var(--shadow-sm);">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-xs);">
+                    <div class="card" style="padding: 16px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
                             <span style="font-weight: 600;">${r.username}</span>
                             <span style="color: #f1c40f;">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
                         </div>
                         <p>${r.comment}</p>
-                        <small style="color: var(--text-light);">${new Date(r.created_at).toLocaleDateString()}</small>
+                        <small style="color: #666;">${new Date(r.created_at).toLocaleDateString()}</small>
                     </div>
                 `).join('');
             }
@@ -86,21 +88,24 @@
     }
 
     if (reviewForm) {
-        // Check if user is logged in
         if (!getUser()) {
-            reviewForm.innerHTML = '<p><a href="login.html" style="color: #1a1a1a;">Login</a> to write a review.</p>';
+            reviewForm.innerHTML = '<p><a href="login.html" style="color: #1a1a1a; font-weight: 600;">Login</a> to write a review.</p>';
         } else {
             reviewForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const btn = reviewForm.querySelector('button');
                 const rating = document.getElementById('review-rating').value;
                 const comment = document.getElementById('review-comment').value;
 
+                btn.disabled = true;
                 try {
                     await addReview(recipeId, rating, comment);
                     reviewForm.reset();
                     loadReviews(recipeId);
                 } catch (err) {
                     alert(err.message);
+                } finally {
+                    btn.disabled = false;
                 }
             });
         }

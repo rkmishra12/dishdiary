@@ -17,58 +17,77 @@
     </nav>
 
     <div class="filters-bar container">
-        <input type="text" id="search-input" class="form-input" placeholder="Search recipes...">
+        <div class="search-box">
+            <input type="text" id="search-input" class="form-input"
+                placeholder="Search recipes (e.g. Pasta, Chicken)...">
+            <button id="search-btn" class="btn btn-primary">Search</button>
+        </div>
 
-        <select id="diet-filter" class="filter-select">
-            <option value="">Any Diet</option>
-            <option value="vegetarian">Vegetarian</option>
-            <option value="vegan">Vegan</option>
-            <option value="gluten free">Gluten Free</option>
-            <option value="ketogenic">Ketogenic</option>
-        </select>
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label for="diet-filter">Diet</label>
+                <select id="diet-filter" class="filter-select">
+                    <option value="">Any Diet</option>
+                    <option value="vegetarian">Vegetarian</option>
+                    <option value="vegan">Vegan</option>
+                    <option value="gluten free">Gluten Free</option>
+                    <option value="ketogenic">Ketogenic</option>
+                </select>
+            </div>
 
-        <select id="cuisine-filter" class="filter-select">
-            <option value="">Any Cuisine</option>
-            <option value="italian">Italian</option>
-            <option value="mexican">Mexican</option>
-            <option value="asian">Asian</option>
-            <option value="american">American</option>
-        </select>
+            <div class="filter-group">
+                <label for="cuisine-filter">Cuisine</label>
+                <select id="cuisine-filter" class="filter-select">
+                    <option value="">Any Cuisine</option>
+                    <option value="italian">Italian</option>
+                    <option value="mexican">Mexican</option>
+                    <option value="asian">Asian</option>
+                    <option value="american">American</option>
+                    <option value="indian">Indian</option>
+                    <option value="french">French</option>
+                </select>
+            </div>
 
-        <select id="type-filter" class="filter-select">
-            <option value="">Any Type</option>
-            <option value="main course">Main Course</option>
-            <option value="side dish">Side Dish</option>
-            <option value="dessert">Dessert</option>
-            <option value="appetizer">Appetizer</option>
-            <option value="breakfast">Breakfast</option>
-            <option value="lunch">Lunch</option>
-            <option value="dinner">Dinner</option>
-            <option value="snack">Snack</option>
-            <option value="drink">Drink</option>
-        </select>
+            <div class="filter-group">
+                <label for="type-filter">Meal Type</label>
+                <select id="type-filter" class="filter-select">
+                    <option value="">Any Type</option>
+                    <option value="main course">Main Course</option>
+                    <option value="side dish">Side Dish</option>
+                    <option value="dessert">Dessert</option>
+                    <option value="appetizer">Appetizer</option>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                </select>
+            </div>
 
-        <select id="time-filter" class="filter-select">
-            <option value="">Any Time</option>
-            <option value="15">Under 15 min</option>
-            <option value="30">Under 30 min</option>
-            <option value="45">Under 45 min</option>
-            <option value="60">Under 1 hour</option>
-            <option value="90">Under 90 min</option>
-        </select>
+            <div class="filter-group">
+                <label for="time-filter">Max Time</label>
+                <select id="time-filter" class="filter-select">
+                    <option value="">Any Time</option>
+                    <option value="15">Under 15 min</option>
+                    <option value="30">Under 30 min</option>
+                    <option value="45">Under 45 min</option>
+                    <option value="60">Under 1 hour</option>
+                    <option value="90">Under 1.5 hours</option>
+                </select>
+            </div>
+        </div>
 
-        <button id="search-btn" class="btn btn-primary">Search</button>
+        <div class="filter-actions mt-sm">
+            <button id="clear-filters" class="btn btn-outline btn-sm">Clear All Filters</button>
+        </div>
     </div>
 
-    <div class="container">
+    <div class="container main-content">
+        <div id="results-info" class="mb-md text-muted" style="display: none;"></div>
         <div id="results-grid" class="grid">
             <!-- Results via JS -->
         </div>
     </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/search.js"></script>
+    <script type="module" src="js/search.js"></script>
 </body>
 
 </html>

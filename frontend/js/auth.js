@@ -1,3 +1,6 @@
+import { login, register } from './api.js';
+import { renderNavbar } from './ui.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     renderNavbar();
 
@@ -42,9 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 await register(username, email, password);
-                // Auto login after register or redirect to login? 
-                // Let's redirect to login for simplicity or just auto-login if API supported it.
-                // For now, redirect to login with query param
                 window.location.href = 'login.html?registered=true';
             } catch (err) {
                 authMessage.textContent = err.message;

@@ -1,25 +1,27 @@
-const API_BASE = "http://localhost:3000/api";
+// In production, your backend might be on Render, Fly.io, etc.
+// For now, we'll use a placeholder that you can swap out.
+const API_BASE = "https://dishdiary-sh8n.onrender.com/api";
 
-function getToken() {
+export function getToken() {
   return localStorage.getItem("token");
 }
 
-function setToken(token) {
+export function setToken(token) {
   if (token) localStorage.setItem("token", token);
   else localStorage.removeItem("token");
 }
 
-function getUser() {
+export function getUser() {
   const u = localStorage.getItem("user");
   return u ? JSON.parse(u) : null;
 }
 
-function setUser(user) {
+export function setUser(user) {
   if (user) localStorage.setItem("user", JSON.stringify(user));
   else localStorage.removeItem("user");
 }
 
-async function apiRequest(endpoint, method = "GET", body = null) {
+export async function apiRequest(endpoint, method = "GET", body = null) {
   const headers = {
     "Content-Type": "application/json",
   };
@@ -47,35 +49,38 @@ async function apiRequest(endpoint, method = "GET", body = null) {
 }
 
 // Auth functions
-async function login(email, password) {
+export async function login(email, password) {
   const data = await apiRequest("/auth/login", "POST", { email, password });
   setToken(data.token);
   setUser(data.user);
   return data;
 }
 
-async function register(username, email, password) {
+export async function register(username, email, password) {
   return apiRequest("/auth/register", "POST", { username, email, password });
 }
 
-function logout() {
+export function logout() {
   setToken(null);
   setUser(null);
   window.location.reload();
 }
 
 // Recipe functions
-async function searchRecipes(query = "") {
-  const params = new URLSearchParams(query).toString();
+export async function searchRecipes(query = "") {
+  // Convert object query to URL params if needed
+  const params = typeof query === 'object'
+    ? new URLSearchParams(query).toString()
+    : new URLSearchParams(query).toString();
   return apiRequest(`/recipes/search?${params}`);
 }
 
-async function getRecipeDetails(id) {
+export async function getRecipeDetails(id) {
   return apiRequest(`/recipes/${id}`);
 }
 
 // Review functions
-async function addReview(recipeId, rating, comment) {
+export async function addReview(recipeId, rating, comment) {
   const user = getUser();
   return apiRequest("/reviews", "POST", {
     userId: user.id,
@@ -85,15 +90,35 @@ async function addReview(recipeId, rating, comment) {
   });
 }
 
-async function getReviews(recipeId) {
+export async function getReviews(recipeId) {
   return apiRequest(`/reviews/${recipeId}`);
 }
 
 // User Preference functions
-async function getUserPreferences(userId) {
+export async function getUserPreferences(userId) {
   return apiRequest(`/users/preferences/${userId}`);
 }
 
-async function updateUserPreferences(userId, preferences) {
+export async function updateUserPreferences(userId, preferences) {
   return apiRequest(`/users/preferences/${userId}`, "PUT", preferences);
 }
+
+// Default export for backward compatibility
+export const Api = {
+  getToken,
+  setToken,
+  getUser,
+  setUser,
+  apiRequest,
+  login,
+  register,
+  logout,
+  searchRecipes,
+  getRecipeDetails,
+  addReview,
+  getReviews,
+  getUserPreferences,
+  updateUserPreferences
+};
+
+export default Api;

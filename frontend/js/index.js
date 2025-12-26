@@ -1,7 +1,9 @@
+import { searchRecipes } from './api.js';
+import { renderNavbar, renderRecipeCard, showLoading, showError } from './ui.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
     renderNavbar();
 
-    // Init Logic for Home Page
     const heroSearchBtn = document.getElementById('hero-search-btn');
     const heroSearchInput = document.getElementById('hero-search-input');
     const featuredGrid = document.getElementById('featured-grid');
@@ -21,13 +23,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Load Featured/Random Recipes
+    // Load Featured Recipes
     if (featuredGrid) {
         showLoading(featuredGrid);
         try {
-            // "Featured" is just a search for 'healthy' or something generic for now
             const data = await searchRecipes({ query: 'healthy', number: 6 });
-            const recipes = data.results; // Spoonacular format
+            const recipes = data.results || [];
 
             if (recipes.length === 0) {
                 featuredGrid.innerHTML = '<p class="text-center">No recipes found.</p>';

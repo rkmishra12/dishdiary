@@ -1,4 +1,6 @@
-function renderNavbar() {
+import { getUser, logout } from './api.js';
+
+export function renderNavbar() {
     const user = getUser();
     const navLinks = document.querySelector('.nav-links');
 
@@ -23,12 +25,12 @@ function renderNavbar() {
     }
 }
 
-function handleLogout(e) {
+export function handleLogout(e) {
     e.preventDefault();
     logout();
 }
 
-function renderRecipeCard(recipe) {
+export function renderRecipeCard(recipe) {
     const id = recipe.id;
     const title = recipe.title;
     const image = recipe.image;
@@ -49,10 +51,20 @@ function renderRecipeCard(recipe) {
     `;
 }
 
-function showLoading(element) {
+export function showLoading(element) {
     element.innerHTML = '<div class="text-center mt-lg"><p>Loading...</p></div>';
 }
 
-function showError(element, message) {
+export function showError(element, message) {
     element.innerHTML = `<div class="text-center mt-lg" style="color: #d9534f;"><p>${message}</p></div>`;
 }
+
+export const UI = {
+    renderNavbar,
+    handleLogout,
+    renderRecipeCard,
+    showLoading,
+    showError
+};
+
+export default UI;

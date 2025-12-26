@@ -1,3 +1,6 @@
+import { getUser, getUserPreferences, updateUserPreferences } from './api.js';
+import { renderNavbar } from './ui.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     renderNavbar();
 
@@ -11,21 +14,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial Render
     profileContent.innerHTML = `
-        <div class="card" style="padding: var(--spacing-xl); text-align: center;">
-            <h1 style="margin-bottom: var(--spacing-sm);">Hello, ${user.username}!</h1>
-            <p style="color: var(--text-light); margin-bottom: var(--spacing-lg);">${user.email}</p>
+        <div class="card" style="padding: 24px; text-align: center;">
+            <h1 style="margin-bottom: 8px;">Hello, ${user.username}!</h1>
+            <p style="color: #666; margin-bottom: 24px;">${user.email}</p>
             <p>Your ID: ${user.id}</p>
             
-            <div style="margin-top: var(--spacing-xl); text-align: left;">
+            <div style="margin-top: 32px; text-align: left;">
                 <h2>My Preferences</h2>
                 <div id="preferences-container">
                     <p>Loading preferences...</p>
                 </div>
             </div>
             
-            <div style="margin-top: var(--spacing-xl); text-align: left;">
+            <div style="margin-top: 32px; text-align: left;">
                 <h2>My Favorite Recipes</h2>
-                <p style="color: var(--text-light);">Coming soon...</p>
+                <p style="color: #666;">Coming soon...</p>
             </div>
         </div>
     `;
@@ -56,11 +59,11 @@ function renderPreferencesForm(userId, currentPrefs) {
     const userSkillLevel = currentPrefs.cooking_skill_level || 'beginner';
     const userIngredientPrefs = currentPrefs.ingredient_preferences || [];
 
-    let html = '<form id="preferences-form">';
+    let html = '<form id="preferences-form" class="mt-md">';
 
     // Cooking Skill Level Section
-    html += '<h3 style="margin-top: var(--spacing-md);">Cooking Skill Level</h3>';
-    html += '<select id="skill-level" class="form-input" style="width: auto;">';
+    html += '<h3 class="mb-sm">Cooking Skill Level</h3>';
+    html += '<select id="skill-level" class="filter-select mb-md" style="width: auto; display: block;">';
     skillLevels.forEach(level => {
         const selected = level === userSkillLevel ? 'selected' : '';
         html += `<option value="${level}" ${selected}>${level.charAt(0).toUpperCase() + level.slice(1)}</option>`;
@@ -68,12 +71,12 @@ function renderPreferencesForm(userId, currentPrefs) {
     html += '</select>';
 
     // Diets Section
-    html += '<h3 style="margin-top: var(--spacing-md);">Dietary Restrictions</h3>';
-    html += '<div style="display: flex; gap: 10px; flex-wrap: wrap;">';
+    html += '<h3 class="mb-sm">Dietary Restrictions</h3>';
+    html += '<div style="display: flex; gap: 10px; flex-wrap: wrap;" class="mb-md">';
     diets.forEach(diet => {
         const checked = userDiets.includes(diet) ? 'checked' : '';
         html += `
-            <label style="display: flex; align-items: center; gap: 5px;">
+            <label style="display: flex; align-items: center; gap: 8px; background: #f0f0f0; padding: 6px 12px; border-radius: 20px; cursor: pointer;">
                 <input type="checkbox" name="diet" value="${diet}" ${checked}>
                 ${diet}
             </label>
@@ -82,12 +85,12 @@ function renderPreferencesForm(userId, currentPrefs) {
     html += '</div>';
 
     // Allergies Section
-    html += '<h3 style="margin-top: var(--spacing-md);">Allergies / Intolerances</h3>';
-    html += '<div style="display: flex; gap: 10px; flex-wrap: wrap;">';
+    html += '<h3 class="mb-sm">Allergies / Intolerances</h3>';
+    html += '<div style="display: flex; gap: 10px; flex-wrap: wrap;" class="mb-md">';
     allergies.forEach(allergy => {
         const checked = userAllergies.includes(allergy) ? 'checked' : '';
         html += `
-            <label style="display: flex; align-items: center; gap: 5px;">
+            <label style="display: flex; align-items: center; gap: 8px; background: #f0f0f0; padding: 6px 12px; border-radius: 20px; cursor: pointer;">
                 <input type="checkbox" name="allergy" value="${allergy}" ${checked}>
                 ${allergy}
             </label>
@@ -96,13 +99,13 @@ function renderPreferencesForm(userId, currentPrefs) {
     html += '</div>';
 
     // Ingredient Preferences (Avoid List) Section
-    html += '<h3 style="margin-top: var(--spacing-md);">Ingredients to Avoid</h3>';
-    html += '<p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: var(--spacing-sm);">Enter ingredients separated by commas (e.g., mushrooms, olives, cilantro)</p>';
-    html += `<input type="text" id="ingredient-prefs" class="form-input" value="${userIngredientPrefs.join(', ')}" placeholder="Enter ingredients to avoid...">`;
+    html += '<h3 class="mb-sm">Ingredients to Avoid</h3>';
+    html += '<p class="text-muted mb-sm" style="font-size: 0.9rem;">Enter ingredients separated by commas (e.g., mushrooms, olives, cilantro)</p>';
+    html += `<input type="text" id="ingredient-prefs" class="form-input mb-md" value="${userIngredientPrefs.join(', ')}" placeholder="Enter ingredients to avoid...">`;
 
     html += `
-        <button type="submit" class="btn btn-primary" style="margin-top: var(--spacing-lg);">Save Preferences</button>
-        <p id="save-status" style="margin-top: var(--spacing-sm); font-size: 0.9em;"></p>
+        <button type="submit" class="btn btn-primary mt-md">Save Preferences</button>
+        <p id="save-status" class="mt-sm" style="font-size: 0.9em;"></p>
     `;
 
     html += '</form>';
@@ -113,7 +116,7 @@ function renderPreferencesForm(userId, currentPrefs) {
         e.preventDefault();
         const status = document.getElementById('save-status');
         status.textContent = 'Saving...';
-        status.style.color = 'var(--text-light)';
+        status.style.color = '#777';
 
         const formData = new FormData(e.target);
         const selectedDiets = formData.getAll('diet');
