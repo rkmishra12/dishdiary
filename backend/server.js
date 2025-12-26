@@ -16,14 +16,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
+import cors from "cors";
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: ["http://localhost:3000", "https://dishdiary-mu.vercel.app"],
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
