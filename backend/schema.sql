@@ -1,4 +1,4 @@
-USE defaultdb;
+    USE defaultdb;
 
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,

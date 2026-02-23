@@ -17,9 +17,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (searchInput) searchInput.value = initialQuery;
 
-    /**
-     * Get current filter values
-     */
     function getFilters() {
         return {
             query: searchInput.value.trim(),
@@ -30,9 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     }
 
-    /**
-     * Perform the search request
-     */
     async function executeSearch() {
         const filters = getFilters();
 
@@ -78,9 +72,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    /**
-     * Reset all filters
-     */
     function clearFilters() {
         searchInput.value = '';
         filterSelects.forEach(select => select.value = '');

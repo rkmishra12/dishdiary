@@ -1,6 +1,4 @@
-// In production, your backend might be on Render, Fly.io, etc.
-// For now, we'll use a placeholder that you can swap out.
-const API_BASE = "https://dishdiary-sh8n.onrender.com/api";
+const API_BASE = "http://localhost:3000/api";
 
 export function getToken() {
   return localStorage.getItem("token");
@@ -68,7 +66,6 @@ export function logout() {
 
 // Recipe functions
 export async function searchRecipes(query = "") {
-  // Convert object query to URL params if needed
   const params =
     typeof query === "object"
       ? new URLSearchParams(query).toString()

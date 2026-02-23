@@ -24,9 +24,9 @@ dotenv.config({ path: path.join(process.cwd(), "backend/.env") });
     );
     await connection.query(schema);
 
-    console.log("🎉 Tables created successfully on Aiven!");
+    console.log("Tables created successfully on Aiven!");
     await connection.end();
   } catch (err) {
-    console.error("❌ Error initializing DB:", err);
+    console.error("Error initializing DB:", err);
   }
 })();

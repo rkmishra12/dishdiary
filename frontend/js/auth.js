@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Check for registered query param
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('registered')) {
         authMessage.textContent = 'Registration successful! Please login.';

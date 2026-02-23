@@ -35,9 +35,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ${dietTags}
                     </div>
                     <div style="display: flex; gap: 24px; color: #666;">
-                        <span>⏱ ${recipe.readyInMinutes} mins</span>
-                        <span>👥 Serves ${recipe.servings}</span>
-                        <span>❤️ ${recipe.aggregateLikes} likes</span>
+                        <span> ${recipe.readyInMinutes} mins</span>
+                        <span> Serves ${recipe.servings}</span>
+                        <span> ${recipe.aggregateLikes} likes</span>
                     </div>
                 </div>
             </div>

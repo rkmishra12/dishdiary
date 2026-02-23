@@ -28,9 +28,6 @@ export const updatePreferences = async (req, res) => {
     try {
         const { userId } = req.params;
         const { dietary_preferences, allergies, cooking_skill_level, ingredient_preferences } = req.body;
-
-        // Using INSERT ... ON DUPLICATE KEY UPDATE to handle both create and update
-        // We ensure arrays are stringified for JSON columns
         const dietJson = JSON.stringify(dietary_preferences || []);
         const allergiesJson = JSON.stringify(allergies || []);
         const ingredientPrefsJson = JSON.stringify(ingredient_preferences || []);
