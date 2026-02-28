@@ -47,15 +47,25 @@ export async function apiRequest(endpoint, method = "GET", body = null) {
 }
 
 // Auth functions
-export async function login(email, password) {
-  const data = await apiRequest("/auth/login", "POST", { email, password });
+export async function login(email, phone, password) {
+  const data = await apiRequest("/auth/login", "POST", {
+    email,
+    phone,
+    password,
+  });
   setToken(data.token);
   setUser(data.user);
+  console.log("Logged in user:", data.user);
   return data;
 }
 
-export async function register(username, email, password) {
-  return apiRequest("/auth/register", "POST", { username, email, password });
+export async function register(username, email, phone, password) {
+  return apiRequest("/auth/register", "POST", {
+    username,
+    email,
+    phone,
+    password,
+  });
 }
 
 export function logout() {
@@ -99,6 +109,10 @@ export async function getUserPreferences(userId) {
 
 export async function updateUserPreferences(userId, preferences) {
   return apiRequest(`/users/preferences/${userId}`, "PUT", preferences);
+}
+
+export async function addFavourites(userId, recipeId) {
+  return apiRequest(`/users/favourites/${userId}`, "POST", recipeId);
 }
 
 // Default export for backward compatibility

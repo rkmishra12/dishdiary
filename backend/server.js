@@ -12,9 +12,9 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://dishdiary-mu.vercel.app"],
+    origin: ["http://127.0.0.1:5500", "https://dishdiary-mu.vercel.app"],
     credentials: true,
-  })
+  })  
 );
 
 app.use(express.json());

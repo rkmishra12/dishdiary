@@ -4,15 +4,15 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, phone, password } = req.body;
 
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !phone) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const [existing] = await db.query(
       "SELECT id FROM users WHERE email = ? OR username = ?",
-      [email, username]
+      [email, username, phone],
     );
 
     if (existing.length > 0) {
@@ -23,7 +23,7 @@ export const register = async (req, res) => {
 
     const [result] = await db.query(
       "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)",
-      [username, email, passwordHash]
+      [username, email, passwordHash],
     );
 
     return res.status(201).json({
@@ -38,14 +38,15 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, phone } = req.body;
 
-    if (!email || !password) {
+    if (!email || !password || !phone) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const [users] = await db.query("SELECT * FROM users WHERE email = ?", [
       email,
+      phone,
     ]);
     if (users.length === 0) {
       return res.status(401).json({ message: "Invalid credentials" });
@@ -69,7 +70,12 @@ export const login = async (req, res) => {
     return res.json({
       message: "Login successful",
       token,
-      user: { id: user.id, username: user.username, email: user.email },
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        phone: user.phone,
+      },
     });
   } catch (err) {
     console.error("LOGIN ERROR:", err);

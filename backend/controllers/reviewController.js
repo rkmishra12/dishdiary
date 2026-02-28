@@ -8,6 +8,10 @@ export const addReview = async (req, res) => {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
+        if(comment.length >= 300){
+            return res.status(400).json({message:"Review message can not exceed more than 300 letters."});
+        }
+        
         const [result] = await db.query(
             'INSERT INTO reviews (user_id, external_recipe_id, rating, comment) VALUES (?, ?, ?, ?)',
             [userId, recipeId, rating, comment]

@@ -1,32 +1,43 @@
-import { getUser, getRecipeDetails, getReviews, addReview } from './api.js';
-import { renderNavbar, showLoading, showError } from './ui.js';
+import {
+  getUser,
+  getRecipeDetails,
+  getReviews,
+  addReview,
+  addFavourites,
+} from "./api.js";
+import { renderNavbar, showLoading, showError } from "./ui.js";
 
-document.addEventListener('DOMContentLoaded', async () => {
-    renderNavbar();
+document.addEventListener("DOMContentLoaded", async () => {
+  renderNavbar();
 
-    const recipeContent = document.getElementById('recipe-content');
-    const reviewsList = document.getElementById('reviews-list');
-    const reviewForm = document.getElementById('review-form');
+  const recipeContent = document.getElementById("recipe-content");
+  const reviewsList = document.getElementById("reviews-list");
+  const reviewForm = document.getElementById("review-form");
+  const favForm = document.getElementById("favForm");
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const recipeId = urlParams.get('id');
+  const urlParams = new URLSearchParams(window.location.search);
+  const recipeId = urlParams.get("id");
 
-    if (!recipeId) {
-        window.location.href = 'index.html';
-        return;
-    }
+  if (!recipeId) {
+    window.location.href = "index.html";
+    return;
+  }
 
-    // Load Recipe Details
-    showLoading(recipeContent);
+  // Load Recipe Details
+  showLoading(recipeContent);
 
-    try {
-        const recipe = await getRecipeDetails(recipeId);
+  try {
+    const recipe = await getRecipeDetails(recipeId);
 
-        // Render Details
-        const ingredients = recipe.extendedIngredients.map(ing => `<li>${ing.original}</li>`).join('');
-        const dietTags = (recipe.diets || []).map(d => `<span class="tag">${d}</span>`).join('');
+    // Render Details
+    const ingredients = recipe.extendedIngredients
+      .map((ing) => `<li>${ing.original}</li>`)
+      .join("");
+    const dietTags = (recipe.diets || [])
+      .map((d) => `<span class="tag">${d}</span>`)
+      .join("");
 
-        recipeContent.innerHTML = `
+    recipeContent.innerHTML = `
             <div class="recipe-header" style="margin-bottom: 32px;">
                 <img src="${recipe.image}" alt="${recipe.title}" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 12px;">
                 <div style="margin-top: 24px;">
@@ -52,62 +63,88 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div>
                     <h3 style="margin-bottom: 16px;">Instructions</h3>
                     <div class="instructions" style="line-height: 1.8;">
-                        ${recipe.instructions || 'No instructions provided.'}
+                        ${recipe.instructions || "No instructions provided."}
                     </div>
                 </div>
             </div>
         `;
 
-        // Load Reviews
-        loadReviews(recipeId);
+    // Load Reviews
+    loadReviews(recipeId);
+  } catch (err) {
+    showError(recipeContent, "Failed to load recipe details.");
+  }
 
-    } catch (err) {
-        showError(recipeContent, 'Failed to load recipe details.');
-    }
-
-    async function loadReviews(id) {
-        try {
-            const reviews = await getReviews(id);
-            if (reviews.length === 0) {
-                reviewsList.innerHTML = '<p class="text-center" style="color: #666;">No reviews yet. Be the first!</p>';
-            } else {
-                reviewsList.innerHTML = reviews.map(r => `
+  async function loadReviews(id) {
+    try {
+      const reviews = await getReviews(id);
+      if (reviews.length === 0) {
+        reviewsList.innerHTML =
+          '<p class="text-center" style="color: #666;">No reviews yet. Be the first!</p>';
+      } else {
+        reviewsList.innerHTML = reviews
+          .map(
+            (r) => `
                     <div class="card" style="padding: 16px; margin-bottom: 12px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
                             <span style="font-weight: 600;">${r.username}</span>
-                            <span style="color: #f1c40f;">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                            <span style="color: #f1c40f;">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</span>
                         </div>
                         <p>${r.comment}</p>
                         <small style="color: #666;">${new Date(r.created_at).toLocaleDateString()}</small>
                     </div>
-                `).join('');
-            }
+                `,
+          )
+          .join("");
+      }
+    } catch (err) {
+      reviewsList.innerHTML = "<p>Failed to load reviews.</p>";
+    }
+  }
+
+  if (reviewForm) {
+    if (!getUser()) {
+      reviewForm.innerHTML =
+        '<p><a href="login.html" style="color: #1a1a1a; font-weight: 600;">Login</a> to write a review.</p>';
+    } else {
+      reviewForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const btn = reviewForm.querySelector("button");
+        const rating = document.getElementById("review-rating").value;
+        const comment = document.getElementById("review-comment").value;
+
+        btn.disabled = true;
+        try {
+          await addReview(recipeId, rating, comment);
+          reviewForm.reset();
+          loadReviews(recipeId);
         } catch (err) {
-            reviewsList.innerHTML = '<p>Failed to load reviews.</p>';
+          alert(err.message);
+        } finally {
+          btn.disabled = false;
         }
+      });
     }
-
-    if (reviewForm) {
-        if (!getUser()) {
-            reviewForm.innerHTML = '<p><a href="login.html" style="color: #1a1a1a; font-weight: 600;">Login</a> to write a review.</p>';
-        } else {
-            reviewForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = reviewForm.querySelector('button');
-                const rating = document.getElementById('review-rating').value;
-                const comment = document.getElementById('review-comment').value;
-
-                btn.disabled = true;
-                try {
-                    await addReview(recipeId, rating, comment);
-                    reviewForm.reset();
-                    loadReviews(recipeId);
-                } catch (err) {
-                    alert(err.message);
-                } finally {
-                    btn.disabled = false;
-                }
-            });
+  }
+  if (favForm) {
+    if (!getUser()) {
+      favForm.innerHTML =
+        '<p><a href="login.html" style="color: #1a1a1a; font-weight: 600;">Login</a> to write a review.</p>';
+    } else {
+      favForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const btn = favForm.querySelector("button");
+        btn.disabled = true;
+        try {
+          await addFavourites(recipeId);
+          favForm.reset();
+          favForm.innerHTML = "<p>Item is favourite </p>";
+        } catch (err) {
+          alert(err.message);
+        } finally {
+          btn.disabled = false;
         }
+      });
     }
+  }
 });
