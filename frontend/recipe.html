@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="api-base" content="" />
     <title>Recipe Details - Recipe Management System</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -15,7 +16,7 @@
       </div>
     </nav>
 
-    <div class="container" style="margin-bottom: 80px">
+    <div class="container recipe-page">
       <div id="recipe-content">
         <!-- Populated by JS -->
       </div>
@@ -37,8 +38,8 @@
         </form>
       </div>
 
-      <div id="reviews-section" style="max-width: 800px">
-        <h2 style="margin-bottom: var(--spacing-lg)">Reviews</h2>
+      <div id="reviews-section" class="reviews-section">
+        <h2 class="reviews-title">Reviews</h2>
 
         <div id="reviews-list" style="margin-bottom: var(--spacing-xl)">
           <!-- Populated by JS -->

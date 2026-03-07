@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000/api";
+const API_BASE = "https://dishdiary-sh8n.onrender.com/api";
 
 export function getToken() {
   return localStorage.getItem("token");
