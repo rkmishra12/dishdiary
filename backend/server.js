@@ -8,13 +8,26 @@ import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const ALLOWED_ORIGINS = [
+  "https://dishdiary-mu.vercel.app",
+  process.env.FRONTEND_ORIGIN,
+].filter(Boolean);
 
 // Middleware
 app.use(
   cors({
-    origin: ["http://127.0.0.1:5500", "https://dishdiary-mu.vercel.app"],
+    origin(origin, callback) {
+      if (!origin) return callback(null, true);
+
+      const isLocalhost = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+      if (isLocalhost || ALLOWED_ORIGINS.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`Origin not allowed by CORS: ${origin}`));
+    },
     credentials: true,
-  })  
+  })
 );
 
 app.use(express.json());

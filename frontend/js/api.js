@@ -41,6 +41,11 @@ export async function apiRequest(endpoint, method = "GET", body = null) {
     if (!res.ok) throw new Error(data.message || "Something went wrong");
     return data;
   } catch (err) {
+    if (err instanceof TypeError) {
+      throw new Error(
+        "Cannot reach API server. Make sure backend is running on http://localhost:3000 and CORS allows your frontend origin."
+      );
+    }
     console.error("API Error:", err);
     throw err;
   }
