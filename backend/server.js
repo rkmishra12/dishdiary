@@ -9,7 +9,7 @@ import userRoutes from "./routes/userRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 const ALLOWED_ORIGINS = [
-  "https://dishdiary-mu.vercel.app",
+  "https://dishdiary-mu.vercel.app/index.html",
   process.env.FRONTEND_ORIGIN,
 ].filter(Boolean);
 

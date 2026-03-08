@@ -89,7 +89,7 @@ ul {
   border: none;
 }
 
-.btn-primary {
+/* .btn-primary {
     background-color: #1a1a1a;
     color: #fff;
 }
@@ -97,7 +97,7 @@ ul {
 .btn-primary:hover {
     background-color: #000;
     transform: translateY(-1px);
-}
+} */
 
 .btn-outline {
   background-color: transparent;
